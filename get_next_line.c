@@ -6,35 +6,58 @@
 /*   By: jaemjeon <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 18:31:10 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/18 19:56:26 by jaemjeon         ###   ########.fr       */
+/*   Updated: 2022/03/19 22:23:09 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#define BUFFER_SIZE = 5
+
+int	find_new_line_eof(char *str)
+{
+	int	len;
+
+	len = 0;
+	while (*str != -1 && *str != 0 && *str != '\n')
+	{
+		len++;
+		str++;
+	}
+	return (len);
+}
 
 char	*get_next_line(int fd)
 {
-	static char	*line;
+	char		*line;
 	char		*buffer;
 	int			status;
 
-	buffer = (char *)calloc(sizeof(char) * BUFFER_SIZE + 1);
+	buffer = (char *)calloc(sizeof(char), BUFFER_SIZE + 1);
+	line = (char *)calloc(sizeof(char), 1);
 	if (buffer == 0)
 		return (0);
-	status = read(fd, buffer, BUFFER_SIZE);
-	if (status == -1)
-		return (0);
+	
 	while (1)
 	{
-		line = ft_strjoin(line, buffer);
-		if (line == 0)
+		status = read(fd, buffer, BUFFER_SIZE);
+		if (status == -1)
+		{
+			free(buffer);
+			free(line);
 			return (0);
+		}
+		status = find_new_line_eof(buffer);
+		line = ft_alloced_strnjoin(&line, buffer, status);
+		if (line == 0)
+		{
+			free(buffer);
+			return (0);
+		}
 		if (status != BUFFER_SIZE)
 			break;
+		ft_bzero(buffer, BUFFER_SIZE);
 	}
+	if (buffer[status] == '\n')
+		line =ft_alloced_strnjoin(&line, "\n", 1);
 	free(buffer);
-	printf("%s", line);
-	free(line);
-	return (0);
+	return (line);
 }
