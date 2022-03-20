@@ -6,7 +6,7 @@
 /*   By: jaemjeon <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 18:31:10 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/20 16:37:37 by jaemjeon         ###   ########.fr       */
+/*   Updated: 2022/03/20 22:19:38 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	find_new_line_eof(char *str)
 
 	index = 0;
 	while (index < BUFFER_SIZE && str[index] != 0 && str[index] != '\n')
+		index++;
+	if (str[index] == '\n')
 		index++;
 	return (index);
 }
@@ -53,14 +55,12 @@ char	*get_next_line(int fd)
 			free(buffer);
 			return (0);
 		}
-		if (status != BUFFER_SIZE)
+		if (status != BUFFER_SIZE || buffer[status] == '\n')
 			break;
 		ft_bzero(buffer, BUFFER_SIZE);
 	}
-	if (buffer[status] == '\n')
-		line =ft_alloced_strnjoin(&line, "\n", 1);
-	if (status < BUFFER_SIZE && BUFFER_SIZE - status - 1 > 0)
-		ft_memcpy(save, buffer + status + 1, BUFFER_SIZE - status - 1);
+	if (status < BUFFER_SIZE || buffer[status] == '\n')
+		ft_memcpy(save, buffer + status, BUFFER_SIZE - status - 1);
 	free(buffer);
 	if (*line == 0)
 	{
