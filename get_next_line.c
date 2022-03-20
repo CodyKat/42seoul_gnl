@@ -6,7 +6,7 @@
 /*   By: jaemjeon <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 18:31:10 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/19 22:23:09 by jaemjeon         ###   ########.fr       */
+/*   Updated: 2022/03/20 16:37:37 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,29 @@
 
 int	find_new_line_eof(char *str)
 {
-	int	len;
+	int	index;
 
-	len = 0;
-	while (*str != -1 && *str != 0 && *str != '\n')
-	{
-		len++;
-		str++;
-	}
-	return (len);
+	index = 0;
+	while (index < BUFFER_SIZE && str[index] != 0 && str[index] != '\n')
+		index++;
+	return (index);
 }
 
 char	*get_next_line(int fd)
 {
+	static char	*save;
 	char		*line;
 	char		*buffer;
 	int			status;
 
 	buffer = (char *)calloc(sizeof(char), BUFFER_SIZE + 1);
 	line = (char *)calloc(sizeof(char), 1);
+	if (save == 0)
+		save = (char *)calloc(sizeof(char), BUFFER_SIZE + 1);
+	line = ft_alloced_strnjoin(&line, save, ft_strlen(save));
+	ft_bzero(save, BUFFER_SIZE);
 	if (buffer == 0)
 		return (0);
-	
 	while (1)
 	{
 		status = read(fd, buffer, BUFFER_SIZE);
@@ -58,6 +59,13 @@ char	*get_next_line(int fd)
 	}
 	if (buffer[status] == '\n')
 		line =ft_alloced_strnjoin(&line, "\n", 1);
+	if (status < BUFFER_SIZE && BUFFER_SIZE - status - 1 > 0)
+		ft_memcpy(save, buffer + status + 1, BUFFER_SIZE - status - 1);
 	free(buffer);
+	if (*line == 0)
+	{
+		free(line);
+		return (0);
+	}
 	return (line);
 }

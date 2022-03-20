@@ -6,10 +6,16 @@ char	*get_next_line(int fd);
 
 int main()
 {
-	//int fd;
+	int fd;
 
-	//fd = open("./test", O_RDONLY);
-	char *string = get_next_line(0);
-	printf("%s", string);
+	fd = open("./test", O_RDONLY);
+	char *string;
+	while (1)
+	{
+		string = get_next_line(fd);
+		if (string == 0)
+			break;
+		printf("%s", string);
+	}
 	return 0;
 }

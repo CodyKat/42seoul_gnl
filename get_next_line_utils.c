@@ -6,7 +6,7 @@
 /*   By: jaemjeon <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 19:52:00 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/19 21:55:44 by jaemjeon         ###   ########.fr       */
+/*   Updated: 2022/03/20 17:36:55 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*ft_alloced_strnjoin(char **s1, char *s2, size_t len)
 		return (0);
 	}
 	ft_memcpy(result, *s1, s1_len);
-	ft_memcpy(result + s1_len, s2, len + 1);
+	ft_memcpy(result + s1_len, s2, len);
 	free(*s1);
 	return (result);
 }
