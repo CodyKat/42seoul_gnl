@@ -6,7 +6,7 @@
 /*   By: jaemjeon <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 18:31:10 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/20 22:19:38 by jaemjeon         ###   ########.fr       */
+/*   Updated: 2022/03/21 19:22:27 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	int			status;
 
-	buffer = (char *)calloc(sizeof(char), BUFFER_SIZE + 1);
-	line = (char *)calloc(sizeof(char), 1);
+	buffer = (char *)ft_calloc(sizeof(char), BUFFER_SIZE + 1);
+	line = (char *)ft_calloc(sizeof(char), 1);
 	if (save == 0)
 		save = (char *)calloc(sizeof(char), BUFFER_SIZE + 1);
 	line = ft_alloced_strnjoin(&line, save, ft_strlen(save));
@@ -55,12 +55,12 @@ char	*get_next_line(int fd)
 			free(buffer);
 			return (0);
 		}
-		if (status != BUFFER_SIZE || buffer[status] == '\n')
+		if (status != BUFFER_SIZE || buffer[status - 1] == '\n')
 			break;
 		ft_bzero(buffer, BUFFER_SIZE);
 	}
-	if (status < BUFFER_SIZE || buffer[status] == '\n')
-		ft_memcpy(save, buffer + status, BUFFER_SIZE - status - 1);
+	if (buffer[status - 1] == '\n' && status != BUFFER_SIZE)
+		ft_memcpy(save, buffer + status, BUFFER_SIZE - status);
 	free(buffer);
 	if (*line == 0)
 	{

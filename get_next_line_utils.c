@@ -6,7 +6,7 @@
 /*   By: jaemjeon <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 19:52:00 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/20 17:36:55 by jaemjeon         ###   ########.fr       */
+/*   Updated: 2022/03/21 11:14:32 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*ft_alloced_strnjoin(char **s1, char *s2, size_t len)
 	char	*result;
 
 	s1_len = ft_strlen(*s1);
-	result = (char *)malloc(sizeof(char) * (s1_len + len + 1));
+	result = (char *)ft_calloc(sizeof(char), s1_len + len + 1);
 	if (result == 0)
 	{
 		free(*s1);
