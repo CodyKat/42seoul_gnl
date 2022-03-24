@@ -30,16 +30,22 @@ void    free_all(t_node **table)
             rear = front;
         }
     }
-    //while (--index >= 0)
-    //{
-    //   free(table[index]);
-    //    free(table[index + FD_MAX]);
-    //    index++;
-    //}
     free(table);
 }
 
-int push_pop(t_node **head, int fd, int mode) // malloc fail -> return 0
+
+int	make_status_id(t_node *node)
+{
+	if ((node->node_len == BUFFER_SIZE) && 
+			(node->text[node->node_len - 1] != '\n'))
+		return (NORMAL);
+	else if (node->text[node->node_len - 1] == '\n')
+		return (NEWLINE);
+	else
+		return END_EOF;
+}		
+
+int push_pop(t_node **head, t_node **tail, int mode) // malloc fail -> return 0
 {
     t_node  *new_node;
 
@@ -48,25 +54,25 @@ int push_pop(t_node **head, int fd, int mode) // malloc fail -> return 0
         *head = (*head)->next;
         free((*head)->prev->text);
         free((*head)->prev);
-        (*head)->prev = *head;
+        (*head)->next->prev = *head;
         return (1);
     }
     new_node = (t_node *)ft_calloc(1, sizeof(t_node));
     if (new_node == 0)
         return (0);
-    (*head)->next = new_node;
-    new_node->prev = *head;
-    *head = new_node;
+    (*tail)->next = new_node;
+    new_node->prev = *tail;
+    *tail = new_node;
     new_node->text = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
     if (new_node->text == 0)
         return (0);
     new_node->node_len = read(fd, new_node->text, BUFFER_SIZE);
     if (new_node->node_len == -1)
         return (0);
+	new_node->status = make_status_id(new_node);
     (*head)->oneline_len += ft_cal_oneline(new_node->text);
     return (1);
 }
-
 t_node  **init_table(char **line)
 {
     t_node  **table;
@@ -111,7 +117,7 @@ char    *get_oneline(t_node *head)
             ft_memcpy(line + count * BUFFER_SIZE, node->text, BUFFER_SIZE);
         else
             ft_memcpy(line + count * BUFFER_SIZE, node->text, node->node_len);
-        push_pop(&head, NONE, POP);
+        push_pop(&head, 0, NONE, POP);
         count++;
     }
     if (node->status == NEWLINE)
@@ -127,24 +133,26 @@ char    *get_next_line(int fd)
 {
     static t_node   **table;
     char            *line;
-    t_node          last_node;
+    t_node          *last_node;
     
     table = init_table(&line);
+	last_node = table[fd + FD_MAX];
     if (table == 0)
         return (0);
-    last_node = *table[fd + FD_MAX];
     while (1)
     {
-        if (last_node.status == NORMAL || last_node.status == HEAD)
-            if (push_pop(&table[fd + FD_MAX], fd, PUSH) == 0)
+        if (last_node->status == NORMAL || last_node->status == HEAD)
+		{
+            if (push_pop(&table[fd], &last_node, fd, PUSH) == 0)
                 break;
-        else if (last_node.status == END_EOF || last_node.status == NEWLINE)
+		}
+        else if (last_node->status == END_EOF || last_node->status == NEWLINE)
         {
             line = get_oneline(table[fd]);
             break;
         }
-        else if (last_node.status == EMPTY)
-            push_pop(&table[fd], NONE, POP);
+        else
+            push_pop(&table[fd], 0, NONE, POP);
     }
     if (line == 0)
         free_all(table);

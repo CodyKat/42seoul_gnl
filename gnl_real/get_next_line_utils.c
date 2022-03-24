@@ -5,7 +5,7 @@ int ft_cal_oneline(char *str)
     int len;
 
     len = 0;
-    while (*str == '\n' || *str == '\0')
+    while (*str != '\n' && *str != '\0')
     {
         len++;
         str++;
@@ -19,6 +19,9 @@ char    *ft_memcpy(void *dst, void *src, size_t n)
 {
     unsigned char   *u_dst;
     unsigned char   *u_src;
+
+	u_dst = dst;
+	u_src = src;
     while (n-- > 0)
     {
         *u_dst = *u_src;

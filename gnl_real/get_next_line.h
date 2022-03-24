@@ -7,7 +7,6 @@ typedef struct s_node
 {
 	char	*text;
 	char	*cursor;
-	char	*end;
 	int 	status;
 	int	node_len;
 	int	oneline_len;
