@@ -6,7 +6,7 @@
 /*   By: jaemjeon <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 08:24:45 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/25 16:49:46 by jaemjeon         ###   ########.fr       */
+/*   Updated: 2022/03/25 21:28:08 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	read_once(char **save, int fd)
 	int		status;
 
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (buffer == 0)
+		return (-1);
 	status = read(fd, buffer, BUFFER_SIZE);
 	if (status < 0)
 	{
@@ -31,20 +33,26 @@ int	read_once(char **save, int fd)
 	return (status);
 }
 
-char	*get_oneline(char *save)
+char	*get_oneline(char **save)
 {
 	char	*line;
 	int		line_len;
 
-	if (save == 0)
+	if (*save == 0)
 		return (0);
-	line_len = ft_strchr(save, '\n');
-	if (save[line_len] == '\n')
+	line_len = ft_strchr(*save, '\n');
+	if ((*save)[line_len] == '\n')
 		line_len++;
 	if (line_len == 0)
 		return (0);
 	line = (char *)malloc(sizeof(char) * (line_len + 1));
-	ft_memcpy(line, save, line_len);
+	if (line == 0)
+	{
+		free(*save);
+		*save = 0;
+		return (0);
+	}
+	ft_memcpy(line, *save, line_len);
 	line[line_len] = '\0';
 	return (line);
 }
@@ -60,6 +68,7 @@ void	update_save(char **save)
 	if (**save == '\0')
 	{
 		free(*save);
+		*save = 0;
 		return ;
 	}
 	total_len = ft_strchr(*save, '\0');
@@ -78,7 +87,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	int			read_status;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= FD_MAX)
 		return (0);
 	while (1)
 	{
@@ -87,13 +96,14 @@ char	*get_next_line(int fd)
 		read_status = read_once(&save[fd], fd);
 		if (read_status == -1)
 		{
-			free(save[fd]);
+			if (save[fd] != 0)
+				free(save[fd]);
 			return (0);
 		}
 		else if (read_status == 0)
 			break;
 	}
-	line = get_oneline(save[fd]);
+	line = get_oneline(&save[fd]);
 	update_save(&save[fd]);
 	return (line);
 }
