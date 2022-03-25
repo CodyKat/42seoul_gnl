@@ -6,12 +6,11 @@
 /*   By: jaemjeon <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 08:24:45 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/25 21:28:48 by jaemjeon         ###   ########.fr       */
+/*   Updated: 2022/03/25 21:35:32 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
 
 int	read_once(char **save, int fd)
 {
@@ -92,7 +91,7 @@ char	*get_next_line(int fd)
 	while (1)
 	{
 		if (in_newline(save[fd]))
-			break;
+			break ;
 		read_status = read_once(&save[fd], fd);
 		if (read_status == -1)
 		{
@@ -101,7 +100,7 @@ char	*get_next_line(int fd)
 			return (0);
 		}
 		else if (read_status == 0)
-			break;
+			break ;
 	}
 	line = get_oneline(&save[fd]);
 	update_save(&save[fd]);

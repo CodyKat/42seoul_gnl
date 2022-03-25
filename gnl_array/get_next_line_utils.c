@@ -6,7 +6,7 @@
 /*   By: jaemjeon <jaemjeon@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:40:56 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/25 15:56:32 by jaemjeon         ###   ########.fr       */
+/*   Updated: 2022/03/25 21:36:05 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ft_strchr(char *str, char to_find)
 	while (1)
 	{
 		if (*str == to_find || *str == '\0')
-			break;
+			break ;
 		str++;
 		len++;
 	}
@@ -32,7 +32,7 @@ int	ft_strchr(char *str, char to_find)
 void	*ft_memcpy(void *dst, void *src, size_t n)
 {
 	unsigned char		*p_dst;
-	unsigned char	*p_src;
+	unsigned char		*p_src;
 
 	if (dst == 0 && src == 0)
 		return (0);
