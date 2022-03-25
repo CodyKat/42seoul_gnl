@@ -8,14 +8,14 @@ int main()
 {
 	int fd;
 
-	fd = open("./test", O_RDONLY);
-	char *string;
+		char *string;
 	while (1)
 	{
+		fd = open("./test", O_RDONLY);
 		string = get_next_line(fd);
 		if (string == 0)
 			break;
-		//printf("%s", string);
+		printf("%d", fd);
 		free(string);
 	}
 	return 0;

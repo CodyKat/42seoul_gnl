@@ -6,12 +6,14 @@
 /*   By: jaemjeon <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 08:24:45 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/25 16:49:46 by jaemjeon         ###   ########.fr       */
+/*   Updated: 2022/03/25 16:02:42 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
+#ifndef FD_MAX
+# define FD_MAX 256
+#endif
 
 int	read_once(char **save, int fd)
 {
@@ -20,10 +22,10 @@ int	read_once(char **save, int fd)
 
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	status = read(fd, buffer, BUFFER_SIZE);
-	if (status < 0)
+	if (status <= 0)
 	{
 		free(buffer);
-		return (-1);
+		return (0);
 	}
 	buffer[status] = '\0';
 	*save = ft_strjoin(save, buffer);
@@ -87,7 +89,8 @@ char	*get_next_line(int fd)
 		read_status = read_once(&save[fd], fd);
 		if (read_status == -1)
 		{
-			free(save[fd]);
+			if (save[fd] != 0)
+				free(save[fd]);
 			return (0);
 		}
 		else if (read_status == 0)
