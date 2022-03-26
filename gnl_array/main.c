@@ -9,14 +9,9 @@ int main()
 	int fd;
 
 		char *string;
-	while (1)
-	{
-		fd = open("./test", O_RDONLY);
-		string = get_next_line(fd);
-		if (string == 0)
-			break;
-		printf("%d", fd);
+		//fd = open("test", O_RDONLY);
+		string = get_next_line(2);
+		printf("%s", string);
 		free(string);
-	}
 	return 0;
 }
