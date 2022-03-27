@@ -6,7 +6,7 @@
 /*   By: jaemjeon <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 08:24:45 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/25 21:35:32 by jaemjeon         ###   ########.fr       */
+/*   Updated: 2022/03/27 21:10:46 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ char	*get_oneline(char **save)
 	int		line_len;
 
 	if (*save == 0)
+		return (0);
+	if (**save == 0)
 		return (0);
 	line_len = ft_strchr(*save, '\n');
 	if ((*save)[line_len] == '\n')

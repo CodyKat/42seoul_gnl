@@ -8,13 +8,15 @@ int main()
 {
 	int fd;
 
-		char *string;
-		fd = open("test", O_RDONLY);
-        while (1)
-        {
-		    string = get_next_line(1);
-		    printf("%s", string);
-		    free(string);
-        }
+	char *string;
+	fd = open("test1", O_RDONLY);
+	while (1)
+	{
+		string = get_next_line(1);
+		printf("%s", string);
+		if (string != 0)
+			free(string);
+		printf("한바퀴\n");
+	}
 	return 0;
 }
