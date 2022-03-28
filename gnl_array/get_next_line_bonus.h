@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaemjeon <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jaemjeon <jaemjeon@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/18 19:51:49 by jaemjeon          #+#    #+#             */
-/*   Updated: 2022/03/25 16:18:43 by jaemjeon         ###   ########.fr       */
+/*   Created: 2022/03/28 11:05:09 by jaemjeon          #+#    #+#             */
+/*   Updated: 2022/03/28 11:05:18 by jaemjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 # ifndef FD_MAX
 #  define FD_MAX 256
 # endif
