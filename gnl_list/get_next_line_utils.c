@@ -1,5 +1,4 @@
 #include "get_next_line.h"
-#include <stdlib.h>
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -17,9 +16,24 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-t_fd_port	*get_last_port(t_fd_port *lst)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
-	while (lst && lst->next)
-		lst = lst->next;
-	return (lst);
+	size_t		src_len;
+	const char	*tmp_str = src;
+
+	while (*tmp_str)
+	{
+		src_len++;
+		tmp_str++;
+	}
+	if (dstsize == 0)
+		return (src_len);
+	while (--dstsize > 0)
+	{
+		if (*src == '\0')
+			break ;
+		*dst++ = *src++;
+	}
+	*dst = '\0';
+	return (src_len);
 }

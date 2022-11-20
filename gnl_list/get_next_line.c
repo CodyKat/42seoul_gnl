@@ -1,5 +1,4 @@
 #include "get_next_line.h"
-# include <stdlib.h>
 # include <unistd.h>
 
 t_fd_port	*add_new_port_end(t_fd_port **port, int fd)
@@ -46,19 +45,140 @@ t_fd_port	*get_port(t_fd_port **port, int fd)
 	return (ret_port);
 }
 
-#include <stdio.h>
+t_word	*add_new_word_end(t_fd_port *port)
+{
+	t_word	*end_word;
+
+	if (port->head_word == NULL)
+	{
+		port->head_word = (t_word *)malloc(sizeof(t_word));
+		port->head_word->start_idx = 0;
+		port->head_word->next = NULL;
+		port->head_word->string = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+		return (port->head_word);
+	}
+	end_word = port->head_word;
+	while (end_word->next)
+		end_word = end_word->next;
+	end_word->next = (t_word *)malloc(sizeof(t_word));
+	end_word->next->start_idx = 0;
+	end_word->next->next = NULL;
+	end_word->next->string = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	return (end_word->next);
+}
+
+int	has_newline(t_fd_port *port)
+{
+	t_word	*word_node;
+	char	*pstring;
+
+	word_node = port->head_word;
+	if (word_node == NULL)
+		return (FALSE);
+	while (word_node->next)
+		word_node = word_node->next;
+	pstring = &word_node->string[word_node->start_idx];
+	while (*pstring)
+	{
+		if (*pstring == '\n')
+			return (TRUE);
+		pstring++;
+	}
+	return (FALSE);
+}
+
+int	read_port(t_fd_port *port)
+{
+	t_word	*cur_word;
+	ssize_t	ret;
+
+	while (1)
+	{
+		cur_word = add_new_word_end(port);
+		ret = read(port->fd, cur_word->string, BUFFER_SIZE);
+		if (ret != BUFFER_SIZE)
+			return (ret);
+		if (has_newline(port))
+			return (TRUE);
+	}
+}
+
+t_line_info	get_line_info(t_fd_port *port)
+{
+	t_line_info	info;
+	t_word		*word_node;
+
+	word_node = port->head_word;
+	if (word_node == NULL)
+	{
+		info.reserve_block_size = 0;
+		info.len_tail = 0;
+		return (info);
+	}
+	info.reserve_block_size = 0;
+	while (word_node->next)
+	{
+		word_node = word_node->next;
+		info.reserve_block_size++;
+	}
+	info.len_tail = 0;
+	while (word_node->string[word_node->start_idx + info.len_tail] != '\0' && \
+				word_node->string[word_node->start_idx + info.len_tail] != '\n')
+		info.len_tail++;
+	if (word_node->string[word_node->start_idx + info.len_tail] == '\n')
+		info.len_tail++;
+	return (info);
+}
+
+char	*get_one_line(t_fd_port *port)
+{
+	t_line_info	info;
+	char		*line;
+	t_word		*word_node;
+	t_word		*word_node_prev;
+	int			i;
+
+	line = NULL;
+	info = get_line_info(port);
+	line = (char *)malloc(sizeof(char) * \
+				(BUFFER_SIZE * info.reserve_block_size + info.len_tail + 1));
+	if (line == NULL)
+		return (NULL);
+	word_node = port->head_word;
+	i = -1;
+	while (i++ < info.reserve_block_size)
+	{
+		word_node_prev = word_node;
+		word_node = word_node->next;
+		ft_strlcpy(line + BUFFER_SIZE * i, word_node_prev->string, \
+						BUFFER_SIZE + 1);
+		free(word_node_prev->string);
+		free(word_node_prev);
+	}
+	port->head_word = word_node;
+	if (word_node)
+	{
+		ft_strlcpy(line + BUFFER_SIZE * i, \
+				word_node->string + word_node->start_idx, info.len_tail + 1);
+		word_node->start_idx += info.len_tail;
+	}
+	// if (info.len_tail == 0 && info.reserve_block_size == 0)
+		
+	return (line);
+}
 
 char	*get_next_line(int fd)
 {
 	static t_fd_port	*port = NULL;
 	t_fd_port			*cur_port;
+	int					ret_status;
 
 	cur_port = get_port(&port, fd);
-
-	// printf("port add : %p\n", cur_port);
-	// printf("fd : %d\n", cur_port->fd);
-	// printf("haed add : %p\n", cur_port->head_word);
-	// printf("next : %p\n", cur_port->next);
-
-	return (cur_port);
+	if (has_newline(cur_port) == FALSE)
+	{
+		ret_status = read_port(port);
+		if (ret_status == ERROR)
+			return (NULL);
+	}
+	return (get_one_line(port));
 }
