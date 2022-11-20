@@ -13,11 +13,11 @@ int	main()
 	while (1)
 	{
 		line = get_next_line(fd);
-		if (line == 0)
+		if (line == NULL)
 			break ;
-		printf("%s\n", line);
+		printf("%s", line);
 		free(line);
-		sleep(1);
+		// sleep(1);
 	}
 	system("leaks a.out");
 	// t_fd_port	*tmp_port;

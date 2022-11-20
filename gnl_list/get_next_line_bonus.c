@@ -174,11 +174,7 @@ char	*get_next_line(int fd)
 	}
 	line_info = get_line_info(cur_port);
 	if (line_info.len_tail == 0 && line_info.reserve_block_size == 0)
-	{
-		free(cur_port->head_word->string);
-		free(cur_port->head_word);
 		return (NULL);
-	}
 	line = (char *)malloc(sizeof(char) * \
 		(line_info.reserve_block_size * BUFFER_SIZE + line_info.len_tail + 1));
 	if (line == NULL)
