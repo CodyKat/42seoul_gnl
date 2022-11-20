@@ -15,10 +15,16 @@ int	main()
 	{
 		line = get_next_line(loop_fd);
 		loop_fd++;
-		if (loop_fd == 100)
-			return 0;
-		//printf("%s\n", line);
-		//free(line);
+		if (loop_fd == 3)
+			break ;
+			// return 0;
 	}
+	t_fd_port	*tmp_port;
+
+	tmp_port = get_next_line(0);
+	printf("first port add : %p\n", tmp_port);
+	printf("second port add : %p\n", tmp_port->next);
+	tmp_port = get_next_line(1);
+	printf("second port add : %p", tmp_port);
 	return (0);
 }

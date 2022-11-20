@@ -2,7 +2,6 @@
 # define GET_NEXT_LINE_H
 # define BUFFER_SIZE
 
-char	*get_next_line(int fd);
 typedef struct s_word
 {
 	char			*string;
@@ -17,5 +16,6 @@ typedef struct s_fd_port
 	t_word				*head_word;
 }	t_fd_port;
 
+char		*get_next_line(int fd);
 t_fd_port	*get_last_port(t_fd_port *lst);
 #endif
