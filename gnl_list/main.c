@@ -6,10 +6,10 @@
 
 int	main()
 {
-	int	fd;
+	int		fd;
 	char	*line;
 
-	fd = open("infile", O_RDONLY);
+	fd = open("1MB.txt", O_RDONLY);
 	while (1)
 	{
 		line = get_next_line(fd);
@@ -19,7 +19,7 @@ int	main()
 		free(line);
 		// sleep(1);
 	}
-	system("leaks a.out");
+	// system("leaks a.out");
 	// t_fd_port	*tmp_port;
 
 	// tmp_port = get_next_line(0);

@@ -89,18 +89,29 @@ int	has_newline(t_fd_port *port)
 
 int	read_port(t_fd_port *port)
 {
+	char	*buffer;
 	t_word	*cur_word;
 	ssize_t	ret;
 
 	while (1)
 	{
+		buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
+		ret = read(port->fd, buffer, BUFFER_SIZE);
+		if (ret == 0)
+		{
+			free(buffer);
+			return (0);
+		}
 		cur_word = add_new_word_end(port);
-		ret = read(port->fd, cur_word->string, BUFFER_SIZE);
+		ft_strlcpy(cur_word->string, buffer, ret + 1);
 		if (ret != BUFFER_SIZE)
-			return (ret);
+			break ;
 		if (has_newline(port))
-			return (TRUE);
+			break ;
+		free(buffer);
 	}
+	free(buffer);
+	return (ret);
 }
 
 t_line_info	get_line_info(t_fd_port *port)
@@ -165,6 +176,8 @@ char	*get_next_line(int fd)
 	t_fd_port			*cur_port;
 	int					ret_status;
 
+	if (fd < 0)
+		return (NULL);
 	cur_port = get_port(&port, fd);
 	if (has_newline(cur_port) == FALSE)
 	{
